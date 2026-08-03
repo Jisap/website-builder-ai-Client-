@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom"
 import Layout from "./pages/Layout"
+import AuthPage from "./pages/AuthPage"
 
 
 const App = () => {
