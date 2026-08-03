@@ -21,8 +21,10 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/builder/:id" element={<BuilderPage />} />
         <Route path="/preview/:id" element={<PreviewPage />} />
-        {/* <Route path="/publish/:id" element={<PublishPage />} /> */}
       </Route>
+
+      {/* Catch-all - redirect to "/" */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
