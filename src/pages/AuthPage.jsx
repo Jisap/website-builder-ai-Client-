@@ -6,6 +6,10 @@ const AuthPage = ({ mode }) => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const isLogin = mode === 'login';
 
@@ -34,7 +38,53 @@ const AuthPage = ({ mode }) => {
           )}
 
           <form className='space-y-6'>
+            {/* Si estamos en /register mostramos el nombre */}
+            {!isLogin && (
+              <div>
+                <label className='block text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2'>
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder='John Doe'
+                  required
+                  className='w-full pl-2 py-2 border-b border-zinc-200 focus:outline-none focus:border-zinc-950 text-sm
+                   text-zinc-900 bg-transparent placeholder-zinc-300 transition-colors'
+                />
+              </div>
+            )}
 
+            <div>
+              <label className='block text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2'>
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder='you@example.com'
+                required
+                className='w-full pl-2 py-2 border-b border-zinc-200 focus:outline-none focus:border-zinc-950 text-sm
+                   text-zinc-900 bg-transparent placeholder-zinc-300 transition-colors'
+              />
+            </div>
+
+            <div>
+              <label className='block text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2'>
+                Password
+              </label>
+              <input
+                type={showPassword}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder='********'
+                required
+                className='w-full pl-2 py-2 border-b border-zinc-200 focus:outline-none focus:border-zinc-950 text-sm
+                   text-zinc-900 bg-transparent placeholder-zinc-300 transition-colors'
+              />
+            </div>
           </form>
 
           <p>
