@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react"
+import api from "../api/api";
 
 
 
@@ -10,9 +11,24 @@ export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
+  // Auth actions
+  const checkSessions = async () => {
+    try {
+      const { data } = await api.get("/api/auth/me");
+      setUser(data.user)
+    } catch (error) {
+      setUser(null)
+    } finally {
+      setLoadingUser(false)
+    }
+  }
+
+  useEffect(() => {
+    checkSessions()
+  }, [checkSessions]);
 
   return (
-    <AppContext.Provider value={{}}>
+    <AppContext.Provider value={{ user, loadingUser }}>
       {children}
     </AppContext.Provider>
   )
