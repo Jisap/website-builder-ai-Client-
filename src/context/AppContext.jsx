@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useState, useEffect, useCallback } from "react"
 import api from "../api/api";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -151,8 +151,61 @@ export const AppProvider = ({ children }) => {
   }, [activeProject?._id, activeProject?.status, loadProject, user])
 
 
+  const handleGenerate = useCallback(
+    async (prompt) => {
+      if (!user) return;                                                                                // guard: sin sesión no genera nada
+      setGeneratingProject(true);                                                                       // activa loading global de "generando proyecto"
+      try {
+        const { data } = await api.post("/api/projects", { prompt });
+        toast.success("AI Agent is planning structure...");
+        navigate(`/builder/${data._id}`)                                                                // redirige al builder del proyecto recién creado
+      } catch (error) {
+        console.error("Failed to generate project", error);
+        toast.error(error?.response?.data?.error || "Failed to generate project")
+      } finally {
+        setGeneratingProject(false)                                                                     // se desactiva pase lo que pase
+      }
+    }, [navigate, user]
+  )
+
+  const handleDelete = useCallback(
+    async (id) => {
+      if (!user) return;                                                                                // guard: sin sesión no genera nada
+
+      try {
+        await api.delete(`/api/projects/${id}`);
+        setProjects((prev) => prev.filter((p) => p._id !== id))
+        toast.success("Project deleted successfully")
+      } catch (error) {
+        console.error("Failed to delete project", error);
+        toast.error(error?.response?.data?.error || "Failed to delete project")
+      }
+    }, [user]
+  )
+
+
+
   return (
-    <AppContext.Provider value={{ user, loadingUser, login, register }}>
+    <AppContext.Provider value={{
+      user,
+      loadingUser,
+      login,
+      register,
+      projects,
+      loadingProjects,
+      activeProject,
+      loadingActiveProject,
+      chatLoading,
+      generatingProject,
+      activeFile,
+      showCode,
+      setActiveFile,
+      setShowCode,
+      loadProjects,
+      loadProject,
+      handleGenerate,
+      handleDelete,
+    }}>
       {children}
     </AppContext.Provider>
   )

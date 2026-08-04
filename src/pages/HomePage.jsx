@@ -4,7 +4,8 @@ import PrompInput from '../components/PrompInput';
 
 const HomePage = () => {
 
-  const { user } = useAppContext();
+  const { user, projects, loadingProjects, generatingProjects, loadProjects, handleGenerate, handleDelete, logout } = useAppContext();
+
 
   return (
     <div className='h-screen overflow-y-scroll text-white font-sans bg-[url("/bg-img.png")] bg-cover bg-center bg-no-repeat'>
