@@ -13,6 +13,16 @@ export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
+  // States
+  const [projects, setProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
+  const [activeProject, setActiveProject] = useState(null);
+  const [loadingActiveProject, setLoadingActiveProject] = useState(true);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [generatingProject, setGeneratingProject] = useState(false);
+  const [activeFile, setActiveFile] = useState("/App.js");
+  const [showCode, setShowCode] = useState(false);
+
   // Auth actions
   const checkSessions = async () => {
     try {
@@ -56,6 +66,23 @@ export const AppProvider = ({ children }) => {
       throw new Error(errMsg);
     }
   }
+
+  const logout = async () => {
+    try {
+      await api.post("/api/auth/logout")
+      setUser(null);
+      setProjects([]);
+      setActiveProject(null);
+      toast.success("Logged out successfully");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+      toast.error("Failed to logout");
+    }
+  }
+
+  // Projects Actions
+
 
 
   return (

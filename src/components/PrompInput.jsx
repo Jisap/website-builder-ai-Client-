@@ -1,5 +1,5 @@
 import { ArrowRightIcon, CloudUploadIcon, MicIcon } from 'lucide-react';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const PrompInput = ({
   onSubmit, loading = false,
@@ -11,6 +11,12 @@ const PrompInput = ({
 
   const [value, setValue] = useState("");
   const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (autoFocus && textareaRef.current) { // 
+      textareaRef.current.focus();
+    }
+  }, [autoFocus])
 
   const handleSubmit = (e) => {
     if (e) e.preventDefault();
