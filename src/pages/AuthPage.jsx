@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import LoginLeft from '../components/LoginLeft';
 import { Link } from 'react-router-dom';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
 const AuthPage = ({ mode }) => {
 
@@ -75,19 +76,48 @@ const AuthPage = ({ mode }) => {
               <label className='block text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2'>
                 Password
               </label>
-              <input
-                type={showPassword}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder='********'
-                required
-                className='w-full pl-2 py-2 border-b border-zinc-200 focus:outline-none focus:border-zinc-950 text-sm
-                   text-zinc-900 bg-transparent placeholder-zinc-300 transition-colors'
-              />
+
+              <div className='relative'>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder='********'
+                  required
+                  className='w-full pl-2 py-2 border-b border-zinc-200 focus:outline-none focus:border-zinc-950 text-sm
+                    text-zinc-900 bg-transparent placeholder-zinc-300 transition-colors'
+                />
+
+                <button
+                  type='button'
+                  onClick={() => setShowPassword(!showPassword)}
+                  className='absolute right-2 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-600 flex items-center justify-center cursor-pointer transition-colors'
+                >
+                  {showPassword ? <EyeOffIcon size={14} /> : <EyeIcon size={14} />}
+                </button>
+              </div>
             </div>
+
+            <button
+              type='submit'
+              disabled={loading}
+              className='w-full py-2.5 bg-linear-to-br from-red-600 to-amber-600 text-white font-semibold hover:scale-102 disabled:opacity-40 flex items-center
+              justify-center cursor-pointer mt-2 rounded-lg transition-all'
+            >
+              {loading ? (
+                <>
+                  <Loader2Icon size={16} className='animate-spin h-3.5 w-3.5 mr-2' />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  {isLogin ? "Sign In" : "Sign Up"}
+                </>
+              )}
+            </button>
           </form>
 
-          <p>
+          <p className='text-sm text-zinc-400 mt-8 pt-6 border-t border-zinc-100 font-sans'>
             {isLogin ? (
               <>
                 New to BuilderAI?{" "}
