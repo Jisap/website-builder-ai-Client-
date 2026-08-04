@@ -82,7 +82,73 @@ export const AppProvider = ({ children }) => {
   }
 
   // Projects Actions
+  const loadProjects = async () => {
+    if (!user) return;
+    setLoadingProjects(true);
+    try {
+      const { data } = await api.get("/api/projects");
+      setProjects(data.projects);
+    } catch (error) {
+      console.error("Failed to load projects", error);
+      toast.error("Failed to load projects");
+    } finally {
+      setLoadingProjects(false);
+    }
+  }
 
+  // Silent es un flag para controlar si esa llamada debe mostrar feedback visual al usuario (loading spinner, toasts de error, redirección) o pasar desapercibida.
+
+  const loadProject = async (id, silent = false) => {
+    if (!user) return;
+    if (!silent) setLoadingActiveProject(true);               // Si no se pasa el parámetro silent, se muestra el loading
+    try {
+      const { data } = await api.get(`/api/projects/${id}`);
+      setActiveProject(data.project);
+
+      // Default file section
+      const files = Object.keys(data.files);                  // Obtiene las claves del objeto data.files que son los nombres de los archivos.
+      if (files.length > 0) {                                 // Si hay archivos, se establece el archivo activo:
+        setActiveFile((prev) => {
+          if (files.includes(prev)) return prev;              // Si el archivo activo anterior existe, se mantiene
+          if (files.includes("/App.js")) return "/App.js";    // Si no existe el prev, se establece como /App.js
+          return files[0];                                    // si no, se establece como el primer archivo existente.
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load project", error);
+      if (!silent) {
+        toast.error("Failed to load project");
+        navigate("/")
+      }
+    } finally {
+      if (!silent) setLoadingActiveProject(false);
+    }
+  }
+
+  /**
+   * Refresco de datos de proyecto activo (Poller)
+   * 1º El usuario crea o edita un proyecto → el backend responde de inmediato con status: "generating".
+   * 2º Este useEffect detecta ese estado y arranca un setInterval que pregunta "¿ya terminaste?" cada 2 segundos.
+   * 3º Usa silent=true porque es una consulta rutinaria en segundo plano — no quieres que la pantalla parpadee con el spinner grande de loadingActiveProject ni que salte un toast de error si un solo intento de red falla.
+   * 4º Cuando el backend eventualmente cambie el status a "completed" (por ejemplo), activeProject.status cambiará, 
+   * el useEffect se volverá a ejecutar, isOngoing será false, y como no entra en el if, ya no se crea un nuevo intervalo → el polling se detiene solo.
+   */
+  useEffect(() => {
+    if (!activeProject?._id || !user) return;                                                           // no hace nada si no hay proyecto activo o no hay sesión
+
+    const isOngoing = activeProject.status === "generating" || activeProject.status === "pending" || activeProject.status === "revising";
+    // ^ comprueba si el proyecto está en algún estado "en curso" (la IA todavía está trabajando)
+
+    if (isOngoing) {
+      setChatLoading(true);                                                                             // muestra un indicador de "generando..." en la UI de chat
+      const interval = setInterval(() => {
+        loadProject(activeProject._id, true);                                                           // silent=true: refresca datos cada 2s SIN mostrar loading ni toasts
+      }, 2000);
+      return () => clearInterval(interval);                                                             // limpia el intervalo al desmontar o cuando cambien las dependencias
+    } else {
+      setChatLoading(false);                                                                            // deja de mostrar el indicador de "generando..." en la UI de chat
+    }
+  }, [activeProject?._id, activeProject?.status, loadProject, user])
 
 
   return (
