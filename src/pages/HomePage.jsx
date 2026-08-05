@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAppContext } from '../context/AppContext';
 import PrompInput from '../components/PrompInput';
 import { homeTags } from '../assets/assets';
@@ -6,8 +6,11 @@ import { homeTags } from '../assets/assets';
 
 const HomePage = () => {
 
-  const { user, projects, loadingProjects, generatingProjects, loadProjects, handleGenerate, handleDelete, logout } = useAppContext();
+  const { user, projects = [], loadingProjects, generatingProject, loadProjects, handleGenerate, handleDelete, logout } = useAppContext();
 
+  useEffect(() => {
+    loadProjects(); // cuando entra a la pagina, carga los proyectos
+  }, [loadProjects]);
 
   return (
     <div className='h-screen overflow-y-scroll text-white font-sans bg-[url("/bg-img.png")] bg-cover bg-center bg-no-repeat'>
@@ -56,7 +59,7 @@ const HomePage = () => {
           <div className='w-full mt-6'>
             <PrompInput
               onSubmit={handleGenerate}
-              loading={generatingProjects}
+              loading={generatingProject}
               placeholder='Create a portfolio website...'
               variant='glass'
               autoFocus
@@ -70,7 +73,7 @@ const HomePage = () => {
                 <button
                   key={i}
                   onClick={() => handleGenerate(tag)}
-                  disabled={generatingProjects}
+                  disabled={generatingProject}
                   className='px-4 py-1.5 border rounded-full text-sm text-white bg-white/10 border-white/25 hover:bg-white/20 transition cursor-pointer shrink-0 font-medium'
                 >
                   {tag}
@@ -78,6 +81,21 @@ const HomePage = () => {
               ))}
             </div>
           </div>
+
+          {/* All Projects */}
+          {!loadingProjects && projects.length > 0 && (
+            <div className='mt-12 w-full'>
+              <div className='flex items-center justify-between pb-3 mb-3 border-b border-white/10'>
+                <p className='text-xs font-medium uppercase text-zinc-100 tracking-widest'>
+                  All Projects
+                </p>
+
+                <span className='text-xs text-zinc-100 font-normal'>
+                  {projects.length} {projects.length === 1 ? "Project" : "Projects"}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

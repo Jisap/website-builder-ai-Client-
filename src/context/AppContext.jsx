@@ -82,19 +82,22 @@ export const AppProvider = ({ children }) => {
   }
 
   // Projects Actions
-  const loadProjects = async () => {
-    if (!user) return;
+  const loadProjects = useCallback(async () => {
+    if (!user) {
+      setLoadingProjects(false); // sin sesión → no hay proyectos, salimos del estado loading
+      return;
+    }
     setLoadingProjects(true);
     try {
       const { data } = await api.get("/api/projects");
-      setProjects(data.projects);
+      setProjects(Array.isArray(data) ? data : (data.projects ?? []));
     } catch (error) {
       console.error("Failed to load projects", error);
       toast.error("Failed to load projects");
     } finally {
       setLoadingProjects(false);
     }
-  }
+  }, [user])
 
   // Silent es un flag para controlar si esa llamada debe mostrar feedback visual al usuario (loading spinner, toasts de error, redirección) o pasar desapercibida.
 
