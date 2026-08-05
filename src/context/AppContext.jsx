@@ -101,15 +101,20 @@ export const AppProvider = ({ children }) => {
 
   // Silent es un flag para controlar si esa llamada debe mostrar feedback visual al usuario (loading spinner, toasts de error, redirección) o pasar desapercibida.
 
-  const loadProject = async (id, silent = false) => {
-    if (!user) return;
+  const loadProject = useCallback(async (id, silent = false) => {
+    if (!user) {
+      if (!silent) setLoadingActiveProject(false); // sin sesión → salimos del loading
+      return;
+    }
     if (!silent) setLoadingActiveProject(true);               // Si no se pasa el parámetro silent, se muestra el loading
     try {
       const { data } = await api.get(`/api/projects/${id}`);
-      setActiveProject(data.project);
+      // La API mock devuelve el proyecto directamente como `data`, no envuelto en { project: ... }
+      const project = data.project ?? data;
+      setActiveProject(project);
 
       // Default file section
-      const files = Object.keys(data.files);                  // Obtiene las claves del objeto data.files que son los nombres de los archivos.
+      const files = Object.keys(project.files ?? {});         // Obtiene las claves del objeto files que son los nombres de los archivos.
       if (files.length > 0) {                                 // Si hay archivos, se establece el archivo activo:
         setActiveFile((prev) => {
           if (files.includes(prev)) return prev;              // Si el archivo activo anterior existe, se mantiene
@@ -126,7 +131,7 @@ export const AppProvider = ({ children }) => {
     } finally {
       if (!silent) setLoadingActiveProject(false);
     }
-  }
+  }, [user, navigate])
 
   /**
    * Refresco de datos de proyecto activo (Poller)

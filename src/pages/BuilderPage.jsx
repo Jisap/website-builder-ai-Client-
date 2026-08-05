@@ -4,6 +4,19 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Loading from '../components/Loading';
 import BuilderHeader from '../components/BuilderHeader';
 
+/**
+ * Flujo del BuilderPage:
+ * mount → user=null → loadProject() sale sin activeProject → <Loading/>
+ *  ↓
+ * checkSessions resuelve → user se define → loadProject cambia de referencia
+ *  ↓
+ * useEffect([id, loadProject]) se dispara de nuevo → fetch real
+ *  ↓
+ * activeProject poblado → loadingActiveProject=false → <BuilderHeader/>
+ *  ↓
+ * si status es pending/generating(/revising) → doble polling (1.5s y 2s) hasta que cambie el status
+ */
+
 const BuilderPage = () => {
 
   const { id } = useParams();
@@ -12,7 +25,16 @@ const BuilderPage = () => {
   const [publishing, setPublishing] = useState(false);
   const [publishUrl, setPublishUrl] = useState(null);
 
-  const { activeProject, loadingActiveProject, activeFile, showCode, setActiveFile, setShowCode, loadProject, logout } = useAppContext()
+  const {
+    activeProject,
+    loadingActiveProject,
+    activeFile,
+    showCode,
+    setActiveFile,
+    setShowCode,
+    loadProject,
+    logout
+  } = useAppContext()
 
   useEffect(() => {
     if (!id) return;
@@ -35,13 +57,34 @@ const BuilderPage = () => {
     )
   }
 
+  const handleOpenPreview = () => {
+    if (!id) return;
+    window.open(`/preview/${id}`, "_blank")
+  }
+
+  const handlePublish = async () => {
+
+  }
+
+  const handleDownload = () => {
+
+  }
+
   return (
     <div className='h-screen flex flex-col bg-white overflow-hidden text-zinc-900 relative'>
       {/* Top Bar Header */}
       <BuilderHeader
         projectName={activeProject.name}
         version={activeProject.version}
+        showCode={showCode}
+        publishing={publishing}
+        onToggleShowCode={() => setShowCode(!showCode)}
+        onOpenPreview={handleOpenPreview}
+        onPublish={handlePublish}
+        onDownload={handleDownload}
         onBack={() => navigate("/")}
+        onLogout={logout}
+
       />
       {/* Main Layout */}
     </div>
