@@ -1,6 +1,8 @@
 import React from 'react'
 import { useAppContext } from '../context/AppContext';
 import PrompInput from '../components/PrompInput';
+import { homeTags } from '../assets/assets';
+
 
 const HomePage = () => {
 
@@ -23,7 +25,10 @@ const HomePage = () => {
 
         <div className='flex items-center gap-4 text-sm font-medium text-zinc-300'>
           <span>{user?.name}</span>
-          <button className='py-1.5 px-3 border boder-white/20 text-white hover:bg-white/10 text-xs rounded-md cursor-pointer bg-transparent'>
+          <button
+            onClick={logout}
+            className='py-1.5 px-3 border boder-white/20 text-white hover:bg-white/10 text-xs rounded-md cursor-pointer bg-transparent'
+          >
             Sign out
           </button>
         </div>
@@ -50,12 +55,28 @@ const HomePage = () => {
           {/* Prompt input with glassmorphism variant */}
           <div className='w-full mt-6'>
             <PrompInput
-              onSubmit={() => { }}
-              loading={false}
+              onSubmit={handleGenerate}
+              loading={generatingProjects}
               placeholder='Create a portfolio website...'
               variant='glass'
               autoFocus
             />
+          </div>
+
+          {/* Scrolling Marquee tags */}
+          <div className='masked-marquee w-full mt-4 max-w-2xl overflow-hidden py-1'>
+            <div className='animate-marquee gap-3'>
+              {homeTags.map((tag, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleGenerate(tag)}
+                  disabled={generatingProjects}
+                  className='px-4 py-1.5 border rounded-full text-sm text-white bg-white/10 border-white/25 hover:bg-white/20 transition cursor-pointer shrink-0 font-medium'
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
