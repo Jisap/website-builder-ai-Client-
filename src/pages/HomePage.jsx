@@ -2,9 +2,13 @@ import React, { useEffect } from 'react'
 import { useAppContext } from '../context/AppContext';
 import PrompInput from '../components/PrompInput';
 import { homeTags } from '../assets/assets';
+import { useNavigate } from 'react-router-dom';
+import { ClockIcon } from 'lucide-react';
 
 
 const HomePage = () => {
+
+  const navigate = useNavigate();
 
   const { user, projects = [], loadingProjects, generatingProject, loadProjects, handleGenerate, handleDelete, logout } = useAppContext();
 
@@ -85,6 +89,7 @@ const HomePage = () => {
           {/* All Projects */}
           {!loadingProjects && projects.length > 0 && (
             <div className='mt-12 w-full'>
+
               <div className='flex items-center justify-between pb-3 mb-3 border-b border-white/10'>
                 <p className='text-xs font-medium uppercase text-zinc-100 tracking-widest'>
                   All Projects
@@ -93,6 +98,34 @@ const HomePage = () => {
                 <span className='text-xs text-zinc-100 font-normal'>
                   {projects.length} {projects.length === 1 ? "Project" : "Projects"}
                 </span>
+              </div>
+
+              <div className='space-y-2 max-h-[80vh] overflow-y-auto pr-1'>
+                {projects.map((p) => (
+                  <div
+                    key={p._id}
+                    onClick={() => navigate(`/builder/${p._id}`)}
+                    className='bg-white/5 border border-white/10 rounded-lg px-4 py-3 flex items-center justify-between
+                    group hover:border-white/20 hover:bg-white/10 cursor-pointer backfrop-blur-md transition-all'
+                  >
+                    <div className='flex-1 min-w-0'>
+                      <p className='text-sm font-medium text-white truncate'>{p.name}</p>
+
+                      <div className='flex items-center gap-3 mt-0.5'>
+                        <span className='text-xs text-zinc-300 flex items-center gap-1'>
+                          <ClockIcon size={10} />
+                          {p.updatedAt || p.createdAt}
+                        </span>
+
+                        <span className='text-xs text-white/60 font-medium'>v{p.version}</span>
+                      </div>
+                    </div>
+
+                    <div>
+
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}

@@ -53,12 +53,192 @@ export const initialProjects = [                                              //
     },
   },
   {
-    _id: "proj-2", // segundo proyecto de ejemplo (mismo patrón)
+    _id: "proj-2",
     name: "Personal Portfolio",
-    // ... resto igual
+    description: "A clean, minimal personal portfolio with an about section, skills grid, project showcase cards, and a contact form.",
+    version: 3,
+    status: "completed",
+    published: false,
+    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+    updatedAt: new Date(Date.now() - 3600000 * 1).toISOString(),
+    messages: [
+      {
+        role: "user",
+        content: "Build me a personal portfolio website with about, skills, projects and contact sections",
+        timestamp: new Date(Date.now() - 86400000 * 5).toISOString(),
+      },
+      {
+        role: "assistant",
+        content: "I've created your personal portfolio with a hero section, an about me block, a skills grid, a projects showcase with cards, and a contact form.",
+        timestamp: new Date(Date.now() - 86400000 * 5 + 6000).toISOString(),
+      },
+      {
+        role: "user",
+        content: "Add a dark mode toggle and improve the projects section with hover effects",
+        timestamp: new Date(Date.now() - 86400000 * 3).toISOString(),
+      },
+      {
+        role: "assistant",
+        content: "Done! I've added a dark/light mode toggle in the header and enhanced the project cards with smooth hover lift and shadow transitions.",
+        timestamp: new Date(Date.now() - 86400000 * 3 + 4000).toISOString(),
+      },
+      {
+        role: "user",
+        content: "Make the hero section more eye-catching with a gradient background and animated text",
+        timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
+      },
+      {
+        role: "assistant",
+        content: "Updated! The hero now features a purple-to-indigo gradient, a typewriter animation for the job title, and a subtle floating avatar effect.",
+        timestamp: new Date(Date.now() - 3600000 * 2 + 5000).toISOString(),
+      },
+    ],
     files: {
-      "/App.js": `... (contenido igual, sin cambios) ...`,
-      "/styles.css": `... (contenido igual, sin cambios) ...`,
+      "/App.js": `import Header from './components/Header';
+import Hero from './components/Hero';
+import About from './components/About';
+import Skills from './components/Skills';
+import Projects from './components/Projects';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import './styles.css';
+
+export default function App() {
+  return (
+    <div className="app">
+      <Header />
+      <main>
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
+  );
+}`,
+      "/components/Header.js": `import { useState } from 'react';
+
+export default function Header() {
+  const [dark, setDark] = useState(false);
+  return (
+    <header className={\`header \${dark ? 'dark' : ''}\`}>
+      <span className="logo">Alex Rivera</span>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button className="theme-toggle" onClick={() => setDark(!dark)}>
+        {dark ? '☀️' : '🌙'}
+      </button>
+    </header>
+  );
+}`,
+      "/components/Hero.js": `export default function Hero() {
+  return (
+    <section className="hero">
+      <div className="hero-content">
+        <h1>Hi, I'm <span className="highlight">Alex Rivera</span></h1>
+        <p className="tagline">Full-Stack Developer · UI Enthusiast · Open Source Contributor</p>
+        <div className="hero-actions">
+          <a href="#projects" className="btn-primary">View My Work</a>
+          <a href="#contact" className="btn-secondary">Get In Touch</a>
+        </div>
+      </div>
+    </section>
+  );
+}`,
+      "/components/About.js": `export default function About() {
+  return (
+    <section id="about" className="about section">
+      <h2>About Me</h2>
+      <p>
+        I'm a passionate full-stack developer with 5+ years of experience building
+        modern web applications. I love turning complex problems into elegant,
+        user-friendly solutions.
+      </p>
+    </section>
+  );
+}`,
+      "/components/Skills.js": `const skills = ['React', 'Node.js', 'TypeScript', 'Python', 'GraphQL', 'PostgreSQL', 'Docker', 'AWS'];
+
+export default function Skills() {
+  return (
+    <section id="skills" className="skills section">
+      <h2>Skills</h2>
+      <div className="skills-grid">
+        {skills.map(s => (
+          <span key={s} className="skill-badge">{s}</span>
+        ))}
+      </div>
+    </section>
+  );
+}`,
+      "/components/Projects.js": `const projects = [
+  { title: 'TaskFlow', desc: 'A drag-and-drop project management tool built with React and Firebase.', stack: ['React', 'Firebase'] },
+  { title: 'DevBlog', desc: 'A markdown-powered developer blog with syntax highlighting and dark mode.', stack: ['Next.js', 'MDX'] },
+  { title: 'ShopQuick', desc: 'An e-commerce storefront with cart, checkout, and Stripe integration.', stack: ['Node.js', 'Stripe'] },
+];
+
+export default function Projects() {
+  return (
+    <section id="projects" className="projects section">
+      <h2>Projects</h2>
+      <div className="projects-grid">
+        {projects.map(p => (
+          <div key={p.title} className="project-card">
+            <h3>{p.title}</h3>
+            <p>{p.desc}</p>
+            <div className="stack-tags">
+              {p.stack.map(t => <span key={t} className="tag">{t}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}`,
+      "/components/Contact.js": `export default function Contact() {
+  return (
+    <section id="contact" className="contact section">
+      <h2>Get In Touch</h2>
+      <form className="contact-form">
+        <input type="text" placeholder="Your Name" />
+        <input type="email" placeholder="Your Email" />
+        <textarea rows={5} placeholder="Your Message" />
+        <button type="submit" className="btn-primary">Send Message</button>
+      </form>
+    </section>
+  );
+}`,
+      "/components/Footer.js": `export default function Footer() {
+  return (
+    <footer className="footer">
+      <p>© {new Date().getFullYear()} Alex Rivera · Built with React</p>
+    </footer>
+  );
+}`,
+      "/styles.css": `* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #0f0f11; color: #e4e4e7; }
+.section { padding: 80px 5%; max-width: 1100px; margin: 0 auto; }
+h2 { font-size: 2rem; margin-bottom: 1.5rem; }
+.hero { background: linear-gradient(135deg, #6d28d9, #4f46e5); padding: 120px 5%; text-align: center; }
+.hero h1 { font-size: 3.5rem; }
+.highlight { color: #a78bfa; }
+.btn-primary { background: #7c3aed; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; }
+.btn-secondary { background: transparent; color: #fff; padding: 12px 28px; border-radius: 8px; border: 1px solid #fff; text-decoration: none; margin-left: 12px; }
+.skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.skill-badge { background: #18181b; border: 1px solid #27272a; padding: 6px 14px; border-radius: 20px; font-size: 0.875rem; }
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.project-card { background: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 24px; transition: transform 0.2s, box-shadow 0.2s; }
+.project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(109,40,217,0.25); }
+.tag { background: #27272a; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; margin-right: 6px; }
+.contact-form { display: flex; flex-direction: column; gap: 14px; max-width: 540px; }
+.contact-form input, .contact-form textarea { background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 12px; color: #e4e4e7; }
+.footer { text-align: center; padding: 30px; color: #71717a; font-size: 0.875rem; }`,
     },
   },
 ];
