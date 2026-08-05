@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate, useParams } from 'react-router-dom'
+import Loading from '../components/Loading';
+import BuilderHeader from '../components/BuilderHeader';
 
 const BuilderPage = () => {
 
@@ -27,8 +29,22 @@ const BuilderPage = () => {
     }
   }, [id, loadProject, activeProject])
 
+  if (loadingActiveProject || !activeProject) {
+    return (
+      <Loading />
+    )
+  }
+
   return (
-    <div>BuilderPage</div>
+    <div className='h-screen flex flex-col bg-white overflow-hidden text-zinc-900 relative'>
+      {/* Top Bar Header */}
+      <BuilderHeader
+        projectName={activeProject.name}
+        version={activeProject.version}
+        onBack={() => navigate("/")}
+      />
+      {/* Main Layout */}
+    </div>
   )
 }
 
