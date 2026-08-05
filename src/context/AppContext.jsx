@@ -208,6 +208,7 @@ export const AppProvider = ({ children }) => {
       loadProject,
       handleGenerate,
       handleDelete,
+      logout
     }}>
       {children}
     </AppContext.Provider>
