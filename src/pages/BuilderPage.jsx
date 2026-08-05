@@ -119,6 +119,19 @@ const BuilderPage = () => {
               <FolderTreeIcon size={13} /> Files
             </button>
           </div>
+
+          {/* Sidebar Content */}
+          <div className='flex-1 overflow-hidden'>
+            {leftTab === "chat" ? (
+              <div className='h-full'>
+                Chat panel
+              </div>
+            ) : (
+              <div className='h-full'>
+                FileExplorer
+              </div>
+            )}
+          </div>
         </div>
 
 
