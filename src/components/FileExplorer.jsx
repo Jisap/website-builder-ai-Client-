@@ -1,4 +1,4 @@
-import { FolderOpenIcon } from "lucide-react";
+import { FileCodeIcon, FileTextIcon, FolderOpenIcon } from "lucide-react";
 import { useMemo } from "react"
 
 
@@ -29,7 +29,15 @@ const buildTree = (paths) => {                                    // Recibe un a
   return root;                                                    // Devuelve el árbol completo ya construido a partir de todas las rutas
 }
 
-const TreeItem = ({ node, activeFile, onFileSelect }) => {
+const getFileIcon = (name) => {
+  if (name.endsWith(".css")) return <FileTextIcon size={14} className="text-sky-500" />
+  if (name.endsWith(".jsx") || name.endsWith(".js")) return <FileCodeIcon size={14} className="text-amber-500" />
+  if (name.endsWith(".json")) return <FileTextIcon size={14} className="text-emerald-500" />
+  return <FileTextIcon size={14} className="text-zinc-400" />
+
+}
+
+const TreeItem = ({ node, activeFile, onFileSelect, depth = 0 }) => {
   const isActive = node.path === activeFile;
 
   if (node.isDir) {
@@ -57,11 +65,31 @@ const TreeItem = ({ node, activeFile, onFileSelect }) => {
     )
   }
 
+  return (
+    <button
+      onClick={() => onFileSelect(node.path)}
+      className={`
+        w-full flex items-center gap-2 py-1.5 px-2 text-xs transition-colors rounded-md cursor-pointer
+        ${isActive
+          ? "bg-zinc-100 text-zinc-950 font-medium"
+          : "text-zinc-500 hover:bg-zinc-500 hover:text-zinc-900"}`
+      }
+      style={{
+        paddingLeft: `${depth * 12 + 8}px`
+      }}
+    >
+      {getFileIcon(node.name)}
+      <span className="truncate">{node.name}</span>
+    </button>
+  )
+
 }
 
 const FileExplorer = ({ files, activeFile, onFileSelect }) => {
 
-  const tree = useMemo(() => buildTree(Object.keys(files)), [])
+  // Memoiza las claves (keys) del objeto files:
+  // ["/src/App.jsx", "/src/main.jsx", "/package.json"]
+  const tree = useMemo(() => buildTree(Object.keys(files)), [files]);
 
   return (
     <div className="py-2 overflow-y-auto hide-scrollbar">

@@ -5,6 +5,7 @@ import Loading from '../components/Loading';
 import BuilderHeader from '../components/BuilderHeader';
 import { FolderTreeIcon, MessageSquareIcon } from 'lucide-react';
 import ChatPanel from '../components/ChatPanel';
+import FileExplorer from '../components/FileExplorer';
 
 /**
  * Flujo del BuilderPage:
@@ -137,7 +138,14 @@ const BuilderPage = () => {
               </div>
             ) : (
               <div className='h-full'>
-                FileExplorer
+                <FileExplorer
+                  files={activeProject.files}
+                  activeFile={activeFile}
+                  onFileSelect={(path) => {
+                    setActiveFile(path)
+                    setShowCode(true)
+                  }}
+                />
               </div>
             )}
           </div>
