@@ -54,7 +54,20 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
     setLiveFiles(project.files);        // Actualiza los archivos del proyecto.
   }
 
-
+  // Esta funcion recibe los archivos del proyecto y los compara con el estado actual.
+  // si encuentra cambios, actualiza el estado local.
+  // si no hay cambios, devuelve los archivos anteriores para evitar re-renderizar.
+  const handleLiveFilesChange = (newFiles) => {
+    setLiveFiles((prev) => {
+      let changed = false;
+      for (const [p, code] of Object.entries(newFiles)) {
+        if (prev[p] !== code) {
+          changed = true;
+        }
+      }
+      return changed ? newFiles : prev
+    });
+  }
 
   // Convert liveFiles to Sandpack format
   const sandPackFiles = useMemo(() => {
@@ -116,7 +129,8 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
           }
         }}
       >
-        <Sand
+        <SandpackFileWatcher onLiveFilesChange={handleLiveFilesChange} />
+        <p>SandpackErrorMonitor</p>
       </SandpackProvider>
     </div>
   )
