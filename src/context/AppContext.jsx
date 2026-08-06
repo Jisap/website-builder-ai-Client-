@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import api from "../api/api";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
+import debounce from "lodash.debounce";
 
 const AppContext = createContext(undefined);
 
@@ -210,7 +211,34 @@ export const AppProvider = ({ children }) => {
         setChatLoading(false)
       }
     }, [activeProject, user]
-  )
+  );
+
+  // Debounce autosave
+  const debouncedSave = React.useMemo(
+    () => debounce(async (files, id) => {
+      try {
+        await api.put(`/api/projects/${id}/files`, { files })
+      } catch (error) {
+        console.error("Failed to auto-save files", error);
+        toast.error(error?.response?.data?.error || "Failed to save code modifications")
+      }
+    }, 1000, [])
+  );
+
+  // Este useEffect cancela cualquier guardado 
+  // pendiente cuando el componente se desmonta
+  useEffect(() => {
+    return () => {
+      debouncedSave.cancel()
+    }
+  }, [debouncedSave])
+
+  // Actualización de archivos con debounce
+  const updateProjectFiles = useCallback(
+    async (files) => {
+      if (!activeProject || !user) return;
+      debouncedSave(files, activeProject._id)
+    }, [activeProject, user, debouncedSave])
 
   return (
     <AppContext.Provider value={{
@@ -233,7 +261,8 @@ export const AppProvider = ({ children }) => {
       handleGenerate,
       handleDelete,
       logout,
-      handleChat
+      handleChat,
+      updateProjectFiles
     }}>
       {children}
     </AppContext.Provider>
