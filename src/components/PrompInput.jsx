@@ -13,7 +13,7 @@ const PrompInput = ({
   const textareaRef = useRef(null);
 
   useEffect(() => {
-    if (autoFocus && textareaRef.current) { // 
+    if (autoFocus && textareaRef.current) { // Si autoFocus es verdadero y el textarea existe, enfócate en el.
       textareaRef.current.focus();
     }
   }, [autoFocus])

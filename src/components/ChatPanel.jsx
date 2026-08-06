@@ -1,5 +1,6 @@
 import { BotIcon, BotMessageSquareIcon, User, UserIcon } from "lucide-react";
-import { useEffect, useReducer } from "react"
+import { useEffect, useRef } from "react"
+import PrompInput from "./PrompInput";
 
 
 const ChatPanel = ({
@@ -8,7 +9,7 @@ const ChatPanel = ({
   loading
 }) => {
 
-  const bottomRef = useReducer(null);
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behaviour: "smooth" }) // Si el scroll existe, scrollea hacia el bottom. Cada vez que cambie Messages o Loading se ejecutará esta función.
@@ -43,7 +44,7 @@ const ChatPanel = ({
                   {msg.role === "user" ? "You" : "AI"}
                 </p>
 
-                <p className="text-[13px] text-zinc-700 leading-0 tracking-wider whitespace-pre-wrap wrap-break-word">
+                <p className="text-[13px] text-zinc-700 leading-relaxed tracking-wider whitespace-pre-wrap break-words">
                   {msg.content.split("- `/").map((text, i) => (
                     <span key={i} className="block mt-3">
                       <span className={i === 0 ? "hidden" : ""}>- `/</span>
@@ -67,7 +68,7 @@ const ChatPanel = ({
                 AI
               </p>
 
-              <div>
+              <div className="dot-loader">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -75,9 +76,19 @@ const ChatPanel = ({
             </div>
           </div>
         )}
+
+        <div ref={bottomRef} />
       </div>
 
       {/* Input */}
+      <div className="p-3 border-t border-zinc-200">
+        <PrompInput
+          onSubmit={onSend}
+          loading={loading}
+          placeholder="Ask to AI to modify..."
+          autoFocus
+        />
+      </div>
 
     </div>
   )
