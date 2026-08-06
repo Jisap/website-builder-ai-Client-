@@ -26,7 +26,6 @@ const BuilderPage = () => {
   const [leftTab, setLeftTab] = useState("chat");
   const [publishing, setPublishing] = useState(false);
   const [publishUrl, setPublishUrl] = useState(null);
-  const [chatLoading, setChatLoading] = useState(false);
 
   const {
     activeProject,
@@ -36,7 +35,9 @@ const BuilderPage = () => {
     setActiveFile,
     setShowCode,
     loadProject,
-    logout
+    logout,
+    chatLoading,
+    handleChat
   } = useAppContext()
 
   useEffect(() => {
@@ -73,9 +74,7 @@ const BuilderPage = () => {
 
   }
 
-  const handleChat = () => {
 
-  }
 
   return (
     <div className='h-screen flex flex-col bg-white overflow-hidden text-zinc-900 relative'>
