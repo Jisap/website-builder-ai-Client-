@@ -10,7 +10,9 @@ const SandpackErrorMonitor = ({ onErrorChange }) => { // Se recibe la prop onErr
   //Si el error tiene un msg de la lista, se ignora, si no se muestra
   useEffect(() => {
     if (error) {
-      const msg = error.message;
+      // Usamos optional chaining porque Sandpack puede devolver un objeto Error
+      // con .message read-only (frozen), lo que lanzaría un TypeError al intentar leerlo directamente
+      const msg = error?.message ?? "";
       const isNetworkError =
         msg.includes("Failed to fetch") ||
         msg.includes("col.csbops.io") ||

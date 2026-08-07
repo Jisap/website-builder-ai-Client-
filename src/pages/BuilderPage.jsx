@@ -95,7 +95,7 @@ const BuilderPage = () => {
 
       />
       {/* Main Layout */}
-      <div className='flex-2 flex overflow-hidden'>
+      <div className='flex-1 flex overflow-hidden'>
         {/* Left Panel */}
         <div className='w-[320px] shrink-0 flex flex-col border-r border-zinc-200 bg-white'>
           {/* Sidebar Tabs */}
@@ -154,7 +154,7 @@ const BuilderPage = () => {
 
 
         {/* Preview / Code area */}
-        <div className='flex overflow-hidden'>
+        <div className='flex-1 flex overflow-hidden'>
           {activeProject.status === "pending" || activeProject.status === "generating" || activeProject.status === "failed"
             ? (
               <Loading />

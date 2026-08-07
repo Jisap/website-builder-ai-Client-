@@ -32,7 +32,30 @@ import SandpackErrorMonitor from './SandpackErrorMonitor';
  */
 
 
-// Componente "espía": vive dentro de SandpackProvider y detecta cuando el usuario
+// Detecta si el contenido de un archivo es un placeholder generado por la IA
+// en lugar de código real (ej: "... (contenido igual, sin cambios) ...").
+// Sandpack fallaría al intentar compilar ese texto y lanzaría un SyntaxError
+// seguido de un TypeError sobre una propiedad read-only del objeto error.
+const isPlaceholderContent = (code) => {
+  if (typeof code !== "string" || code.trim() === "") return false;
+  const trimmed = code.trim();
+  return (
+    trimmed.startsWith("...") ||
+    /^\.{3}\s*\(.*\)\s*\.{3}$/.test(trimmed) || // "... (cualquier cosa) ..."
+    trimmed === "// unchanged"                    // otra variante habitual
+  );
+};
+
+// Fallback válido para archivos placeholder: devuelve un stub compilable
+// según la extensión del archivo, para que Sandpack no use su App.js de
+// template (que muestra "Hello world") cuando descarta el archivo real.
+const placeholderFallback = (path) => {
+  if (path.endsWith(".css")) return "";
+  // Para .js / .jsx se devuelve un componente que no renderiza nada
+  return "export default function PlaceholderComponent() { return null; }";
+};
+
+
 // edita código en el editor, para propagar esos cambios hacia fuera (estado local y BD)
 const SandpackFileWatcher = ({ onLiveFilesChange }) => {
   const { sandpack } = useSandpack();                                        // Acceso al estado interno de Sandpack (incluye los archivos tal como están en el editor)
@@ -66,7 +89,6 @@ const SandpackFileWatcher = ({ onLiveFilesChange }) => {
     if (hasChanges) {                                                        // Solo si hubo cambios respecto al proyecto original...
       updateProjectFiles(updatedFiles)                                       // ...se persiste en el contexto/BD
     }
-    return null;
   }, [files])                                                               // Se ejecuta cada vez que cambian los archivos dentro de Sandpack
 }
 
@@ -106,13 +128,22 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
       const fileCode = typeof content === "string"                  // Normaliza el contenido, que puede venir como...
         ? content                                                   // ...string plano...
         : content?.content || ""                                    // ...o como objeto con propiedad content
+
+      // Si el contenido es un placeholder de la IA (ej: "... (sin cambios) ..."),
+      // se sustituye por un stub válido para que Sandpack no recurra a su App.js
+      // de template (que renderiza "Hello world") al no encontrar el archivo real.
+      const safeCode = isPlaceholderContent(fileCode)
+        ? placeholderFallback(path)
+        : fileCode;
+
       spFiles[path] = {                                             // Se construye la entrada para Sandpack
-        code: fileCode,                                             // Contenido del archivo
+        code: safeCode,                                             // Contenido del archivo (real o stub)
         active: path === activeFile,                                // Marca como activo (abierto en el editor) el archivo seleccionado
       }
     }
     return spFiles                                                  // Devuelve el objeto ya listo para pasar a SandpackProvider
   }, [liveFiles, activeFile]);                                      // Se recalcula solo si cambian liveFiles o el archivo activo
+
 
   // Analiza los imports dentro de liveFiles para inferir qué dependencias npm hacen falta
   const dependencies = useMemo(() => {
