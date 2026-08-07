@@ -49,7 +49,7 @@ const TreeItem = ({ node, activeFile, onFileSelect, depth = 0 }) => {
             paddingLeft: `${depth * 12 + 8}px`
           }}
         >
-          <FolderOpenIcon size={34} className="text-zinc-800 opacity-60" />
+          <FolderOpenIcon size={14} className="text-zinc-800 opacity-60" />
           <span className="truncate">{node.name}</span>
         </div>
         {node.children.map((child) => (

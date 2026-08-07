@@ -43,13 +43,119 @@ export const initialProjects = [                                              //
       },
     ],
     files: { // "archivos" del proyecto generado (código React de plantilla, texto plano)
-      "/App.js": `... (contenido igual, sin cambios) ...`,
-      "/components/Header.js": `... (contenido igual, sin cambios) ...`,
-      "/components/Hero.js": `... (contenido igual, sin cambios) ...`,
-      "/components/Features.js": `... (contenido igual, sin cambios) ...`,
-      "/components/Pricing.js": `... (contenido igual, sin cambios) ...`,
-      "/components/Footer.js": `... (contenido igual, sin cambios) ...`,
-      "/styles.css": `... (contenido igual, sin cambios) ...`,
+      "/App.js": `import Header from './components/Header';
+import Hero from './components/Hero';
+import Features from './components/Features';
+import Pricing from './components/Pricing';
+import Footer from './components/Footer';
+
+export default function App() {
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white font-sans">
+      <Header />
+      <main>
+        <Hero />
+        <Features />
+        <Pricing />
+      </main>
+      <Footer />
+    </div>
+  );
+}`,
+      "/components/Header.js": `export default function Header() {
+  return (
+    <header className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-zinc-950/80 backdrop-blur border-b border-zinc-800">
+      <div className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white">S</div>
+        <span className="text-lg font-bold tracking-tight text-white">SaaSify</span>
+      </div>
+      <nav className="hidden sm:flex gap-6 text-sm text-zinc-400">
+        <a href="#features" className="hover:text-white transition-colors">Features</a>
+        <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+      </nav>
+      <button className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 transition-colors">
+        Get Started
+      </button>
+    </header>
+  );
+}`,
+      "/components/Hero.js": `export default function Hero() {
+  return (
+    <section className="relative overflow-hidden px-6 py-28 text-center max-w-4xl mx-auto">
+      <div className="inline-block rounded-full bg-indigo-500/10 border border-indigo-500/20 px-4 py-1.5 text-xs font-semibold text-indigo-400 mb-6">
+        🚀 SaaSify 2.0 is live
+      </div>
+      <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
+        Supercharge your productivity with <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">AI Workflows</span>
+      </h1>
+      <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+        Automate routine tasks, generate actionable insights, and scale your operations faster than ever before.
+      </p>
+      <div className="mt-8 flex items-center justify-center gap-4">
+        <button className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/25">
+          Start Free Trial
+        </button>
+        <button className="rounded-lg border border-zinc-800 px-6 py-3 text-sm font-medium text-zinc-300 hover:bg-zinc-900 transition-colors">
+          Book a Demo
+        </button>
+      </div>
+    </section>
+  );
+}`,
+      "/components/Features.js": `const features = [
+  { title: "Smart Automation", desc: "Build workflow triggers and actions powered by custom LLM agents." },
+  { title: "Real-time Analytics", desc: "Monitor performance metrics and system usage with live dashboards." },
+  { title: "Enterprise Security", desc: "SOC2 compliant, end-to-end encryption, and role-based access control." }
+];
+
+export default function Features() {
+  return (
+    <section id="features" className="max-w-5xl mx-auto px-6 py-20 border-t border-zinc-900">
+      <h2 className="text-3xl font-bold text-white text-center mb-12">Everything you need to scale</h2>
+      <div className="grid sm:grid-cols-3 gap-6">
+        {features.map((f) => (
+          <div key={f.title} className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+            <h3 className="text-lg font-semibold text-white mb-2">{f.title}</h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}`,
+      "/components/Pricing.js": `export default function Pricing() {
+  return (
+    <section id="pricing" className="max-w-4xl mx-auto px-6 py-20 border-t border-zinc-900 text-center">
+      <h2 className="text-3xl font-bold text-white mb-4">Simple, transparent pricing</h2>
+      <p className="text-zinc-400 mb-12">No hidden fees. Cancel anytime.</p>
+      <div className="grid sm:grid-cols-2 gap-8 text-left">
+        <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-8">
+          <h3 className="text-xl font-bold text-white">Starter</h3>
+          <p className="text-3xl font-extrabold text-white mt-4">$29<span className="text-sm font-normal text-zinc-400">/mo</span></p>
+          <button className="w-full mt-6 rounded-lg border border-zinc-700 py-2.5 text-sm font-medium text-white hover:bg-zinc-800 transition-colors">
+            Get Started
+          </button>
+        </div>
+        <div className="rounded-xl border border-indigo-500/50 bg-indigo-950/20 p-8 relative">
+          <span className="absolute -top-3 right-6 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Popular</span>
+          <h3 className="text-xl font-bold text-white">Pro</h3>
+          <p className="text-3xl font-extrabold text-white mt-4">$79<span className="text-sm font-normal text-zinc-400">/mo</span></p>
+          <button className="w-full mt-6 rounded-lg bg-indigo-600 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 transition-colors">
+            Get Pro Access
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}`,
+      "/components/Footer.js": `export default function Footer() {
+  return (
+    <footer className="border-t border-zinc-900 py-8 text-center text-sm text-zinc-500">
+      © {new Date().getFullYear()} SaaSify Inc. All rights reserved.
+    </footer>
+  );
+}`,
+      "/styles.css": ``,
     },
   },
   {
@@ -101,11 +207,10 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import './styles.css';
 
 export default function App() {
   return (
-    <div className="app">
+    <div className="min-h-screen bg-zinc-950">
       <Header />
       <main>
         <Hero />
@@ -121,17 +226,20 @@ export default function App() {
       "/components/Header.js": `import { useState } from 'react';
 
 export default function Header() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
   return (
-    <header className={\`header \${dark ? 'dark' : ''}\`}>
-      <span className="logo">Alex Rivera</span>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
+    <header className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-zinc-950/80 backdrop-blur border-b border-zinc-800">
+      <span className="text-lg font-semibold tracking-tight text-white">Alex Rivera</span>
+      <nav className="hidden sm:flex gap-6 text-sm text-zinc-400">
+        <a href="#about" className="hover:text-white transition-colors">About</a>
+        <a href="#skills" className="hover:text-white transition-colors">Skills</a>
+        <a href="#projects" className="hover:text-white transition-colors">Projects</a>
+        <a href="#contact" className="hover:text-white transition-colors">Contact</a>
       </nav>
-      <button className="theme-toggle" onClick={() => setDark(!dark)}>
+      <button
+        onClick={() => setDark(!dark)}
+        className="w-9 h-9 flex items-center justify-center rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-600 transition-colors"
+      >
         {dark ? '☀️' : '🌙'}
       </button>
     </header>
@@ -139,13 +247,22 @@ export default function Header() {
 }`,
       "/components/Hero.js": `export default function Hero() {
   return (
-    <section className="hero">
-      <div className="hero-content">
-        <h1>Hi, I'm <span className="highlight">Alex Rivera</span></h1>
-        <p className="tagline">Full-Stack Developer · UI Enthusiast · Open Source Contributor</p>
-        <div className="hero-actions">
-          <a href="#projects" className="btn-primary">View My Work</a>
-          <a href="#contact" className="btn-secondary">Get In Touch</a>
+    <section className="relative overflow-hidden bg-gradient-to-br from-violet-700 via-indigo-700 to-indigo-900 px-6 py-32 text-center">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)]" />
+      <div className="relative max-w-2xl mx-auto">
+        <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight">
+          Hi, I'm <span className="text-violet-300">Alex Rivera</span>
+        </h1>
+        <p className="mt-4 text-lg text-indigo-100">
+          Full-Stack Developer · UI Enthusiast · Open Source Contributor
+        </p>
+        <div className="mt-8 flex items-center justify-center gap-4">
+          <a href="#projects" className="rounded-lg bg-white px-6 py-3 text-sm font-medium text-indigo-900 hover:bg-indigo-50 transition-colors">
+            View My Work
+          </a>
+          <a href="#contact" className="rounded-lg border border-white/40 px-6 py-3 text-sm font-medium text-white hover:bg-white/10 transition-colors">
+            Get In Touch
+          </a>
         </div>
       </div>
     </section>
@@ -153,9 +270,9 @@ export default function Header() {
 }`,
       "/components/About.js": `export default function About() {
   return (
-    <section id="about" className="about section">
-      <h2>About Me</h2>
-      <p>
+    <section id="about" className="max-w-3xl mx-auto px-6 py-20">
+      <h2 className="text-3xl font-bold text-white mb-6">About Me</h2>
+      <p className="text-zinc-400 leading-relaxed">
         I'm a passionate full-stack developer with 5+ years of experience building
         modern web applications. I love turning complex problems into elegant,
         user-friendly solutions.
@@ -167,11 +284,16 @@ export default function Header() {
 
 export default function Skills() {
   return (
-    <section id="skills" className="skills section">
-      <h2>Skills</h2>
-      <div className="skills-grid">
+    <section id="skills" className="max-w-3xl mx-auto px-6 py-20">
+      <h2 className="text-3xl font-bold text-white mb-6">Skills</h2>
+      <div className="flex flex-wrap gap-2">
         {skills.map(s => (
-          <span key={s} className="skill-badge">{s}</span>
+          <span
+            key={s}
+            className="rounded-full border border-zinc-800 bg-zinc-900 px-4 py-1.5 text-sm text-zinc-300"
+          >
+            {s}
+          </span>
         ))}
       </div>
     </section>
@@ -185,15 +307,22 @@ export default function Skills() {
 
 export default function Projects() {
   return (
-    <section id="projects" className="projects section">
-      <h2>Projects</h2>
-      <div className="projects-grid">
+    <section id="projects" className="max-w-5xl mx-auto px-6 py-20">
+      <h2 className="text-3xl font-bold text-white mb-8">Projects</h2>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map(p => (
-          <div key={p.title} className="project-card">
-            <h3>{p.title}</h3>
-            <p>{p.desc}</p>
-            <div className="stack-tags">
-              {p.stack.map(t => <span key={t} className="tag">{t}</span>)}
+          <div
+            key={p.title}
+            className="group rounded-xl border border-zinc-800 bg-zinc-900 p-6 transition-all hover:-translate-y-1 hover:border-violet-700 hover:shadow-xl hover:shadow-violet-900/20"
+          >
+            <h3 className="text-lg font-semibold text-white">{p.title}</h3>
+            <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{p.desc}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {p.stack.map(t => (
+                <span key={t} className="rounded-md bg-zinc-800 px-2.5 py-1 text-xs text-zinc-300">
+                  {t}
+                </span>
+              ))}
             </div>
           </div>
         ))}
@@ -203,47 +332,45 @@ export default function Projects() {
 }`,
       "/components/Contact.js": `export default function Contact() {
   return (
-    <section id="contact" className="contact section">
-      <h2>Get In Touch</h2>
-      <form className="contact-form">
-        <input type="text" placeholder="Your Name" />
-        <input type="email" placeholder="Your Email" />
-        <textarea rows={5} placeholder="Your Message" />
-        <button type="submit" className="btn-primary">Send Message</button>
+    <section id="contact" className="max-w-xl mx-auto px-6 py-20">
+      <h2 className="text-3xl font-bold text-white mb-6">Get In Touch</h2>
+      <form className="flex flex-col gap-4">
+        <input
+          type="text"
+          placeholder="Your Name"
+          className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-violet-600"
+        />
+        <input
+          type="email"
+          placeholder="Your Email"
+          className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-violet-600"
+        />
+        <textarea
+          rows={5}
+          placeholder="Your Message"
+          className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-violet-600"
+        />
+        <button
+          type="submit"
+          className="rounded-lg bg-violet-600 px-6 py-3 text-sm font-medium text-white hover:bg-violet-500 transition-colors"
+        >
+          Send Message
+        </button>
       </form>
     </section>
   );
 }`,
       "/components/Footer.js": `export default function Footer() {
   return (
-    <footer className="footer">
-      <p>© {new Date().getFullYear()} Alex Rivera · Built with React</p>
+    <footer className="border-t border-zinc-800 py-8 text-center text-sm text-zinc-500">
+      © {new Date().getFullYear()} Alex Rivera · Built with React
     </footer>
   );
 }`,
-      "/styles.css": `* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; background: #0f0f11; color: #e4e4e7; }
-.section { padding: 80px 5%; max-width: 1100px; margin: 0 auto; }
-h2 { font-size: 2rem; margin-bottom: 1.5rem; }
-.hero { background: linear-gradient(135deg, #6d28d9, #4f46e5); padding: 120px 5%; text-align: center; }
-.hero h1 { font-size: 3.5rem; }
-.highlight { color: #a78bfa; }
-.btn-primary { background: #7c3aed; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; }
-.btn-secondary { background: transparent; color: #fff; padding: 12px 28px; border-radius: 8px; border: 1px solid #fff; text-decoration: none; margin-left: 12px; }
-.skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-.skill-badge { background: #18181b; border: 1px solid #27272a; padding: 6px 14px; border-radius: 20px; font-size: 0.875rem; }
-.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-.project-card { background: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 24px; transition: transform 0.2s, box-shadow 0.2s; }
-.project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(109,40,217,0.25); }
-.tag { background: #27272a; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; margin-right: 6px; }
-.contact-form { display: flex; flex-direction: column; gap: 14px; max-width: 540px; }
-.contact-form input, .contact-form textarea { background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 12px; color: #e4e4e7; }
-.footer { text-align: center; padding: 30px; color: #71717a; font-size: 0.875rem; }`,
+      "/styles.css": ``,
     },
   },
 ];
-
-// ====== AQUÍ EMPIEZA LO IMPORTANTE: el adapter que sustituye las peticiones HTTP reales ======
 
 api.defaults.adapter = async (config) => {
   // Axios llamará a esta función CADA VEZ que hagas api.get/post/put/delete

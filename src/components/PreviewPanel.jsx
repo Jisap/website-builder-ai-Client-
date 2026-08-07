@@ -89,7 +89,7 @@ const SandpackFileWatcher = ({ onLiveFilesChange }) => {
     if (hasChanges) {                                                        // Solo si hubo cambios respecto al proyecto original...
       updateProjectFiles(updatedFiles)                                       // ...se persiste en el contexto/BD
     }
-  }, [files])                                                               // Se ejecuta cada vez que cambian los archivos dentro de Sandpack
+  }, [files])                                                                // Se ejecuta cada vez que cambian los archivos dentro de Sandpack
 }
 
 const PreviewPanel = ({ project, activeFile, showCode }) => {
