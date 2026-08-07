@@ -50,8 +50,8 @@ const BuilderPage = () => {
   useEffect(() => {
     if (!id || !activeProject) return;
     if (activeProject.status === "pending" || activeProject.status === "generating") { // Si el projecto tiene status pending o generating, se actualiza cada 1.5 segundos.
-      const interval = setInterval(() => {                                           // Cada 1.5s se intentará la carga del proyecto 
-        loadProject(id, true)                                                        // Silent=true para que no se muestre el loading.
+      const interval = setInterval(() => {                                             // Cada 1.5s se intentará la carga del proyecto 
+        loadProject(id, true)                                                          // Silent=true para que no se muestre el loading.
       }, 1500)
       return () => clearInterval(interval)
     }
@@ -68,11 +68,26 @@ const BuilderPage = () => {
     window.open(`/preview/${id}`, "_blank")
   }
 
+  // Publicar proyecto implica llamar al backend para que marque el proyecto como publicado 
+  // y generar la URL de previsualización -> PublishModal se muestra con esa url
   const handlePublish = async () => {
-
+    if (!id) return;
+    setPublishing(true);
+    try {
+      await api.post(`/api/projects/${id}/publish}`);
+      const url = `${window.location.origin}/publish/${id}`;
+      setPublishUrl(url);
+      toast.success("Site published successfully!");
+    } catch (error) {
+      console.error("Publish failed", error)
+      toast.error(error?.response?.data?.error || "Failed to publish site")
+    } finally {
+      setPublishing(false);
+    }
   }
 
   const handleDownload = () => {
+    if (!activeProject) return;
 
   }
 
@@ -142,7 +157,7 @@ const BuilderPage = () => {
                 <FileExplorer
                   files={activeProject.files}
                   activeFile={activeFile}
-                  onFileSelect={(path) => {
+                  onFileSelect={(path) => { // Al seleccionar un archivo, se establece como activo y se abre en el editor.
                     setActiveFile(path)
                     setShowCode(true)
                   }}
@@ -168,6 +183,13 @@ const BuilderPage = () => {
           }
         </div>
       </div>
+
+      {publishUrl && (
+        <PublishModal
+          publishUrl={publishUrl}
+          onClose={() => setPublishUrl(null)}
+        />
+      )}
     </div>
   )
 }
