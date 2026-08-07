@@ -157,7 +157,7 @@ const BuilderPage = () => {
         <div className='flex-1 flex overflow-hidden'>
           {activeProject.status === "pending" || activeProject.status === "generating" || activeProject.status === "failed"
             ? (
-              <Loading />
+              <AgentProgressDashboard project={activeProject} />
             ) : (
               <PreviewPanel
                 project={activeProject}
