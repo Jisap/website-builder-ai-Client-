@@ -7,6 +7,12 @@ import { FolderTreeIcon, MessageSquareIcon } from 'lucide-react';
 import ChatPanel from '../components/ChatPanel';
 import FileExplorer from '../components/FileExplorer';
 import PreviewPanel from '../components/PreviewPanel';
+import { toast } from 'react-hot-toast';
+import api from "../api/api.js"
+import PublishModal from '../components/PublishModal.jsx';
+
+
+
 
 /**
  * Flujo del BuilderPage:
@@ -88,7 +94,7 @@ const BuilderPage = () => {
 
   const handleDownload = () => {
     if (!activeProject) return;
-
+    exportProjectZip(activeProject);
   }
 
 
