@@ -6,6 +6,7 @@ import BuilderHeader from '../components/BuilderHeader';
 import { FolderTreeIcon, MessageSquareIcon } from 'lucide-react';
 import ChatPanel from '../components/ChatPanel';
 import FileExplorer from '../components/FileExplorer';
+import PreviewPanel from '../components/PreviewPanel';
 
 /**
  * Flujo del BuilderPage:
@@ -158,9 +159,11 @@ const BuilderPage = () => {
             ? (
               <Loading />
             ) : (
-              <p>
-                PreviewPanel
-              </p>
+              <PreviewPanel
+                project={activeProject}
+                activeFile={activeFile}
+                showCode={showCode}
+              />
             )
           }
         </div>

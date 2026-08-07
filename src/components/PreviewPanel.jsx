@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'          // FIX 1: se añade useRef al import
-import { SandpackProvider, useSandpack } from '@codesandbox/sandpack-react'
+import { SandpackCodeEditor, SandpackLayout, SandpackPreview, SandpackProvider, useSandpack } from '@codesandbox/sandpack-react'
 import { detectDependencies } from '../utils/sandpackUtils';
 import { useAppContext } from '../context/AppContext';
+import SandpackErrorMonitor from './SandpackErrorMonitor';
 
 /**
  * Flujo de datos entre project.files, liveFiles y Sandpack.
@@ -79,9 +80,9 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
 
   const currentKey = `${project._id}-${project.version}`;                                        // Key derivada del proyecto actual, se recalcula en cada render
 
-  if (prevProjectkey !== currentKey) {   // 2º Si el proyecto o su versión cambiaron desde el último render...
-    setPrevProjectkey(currentKey);       // ...se actualiza la key guardada...
-    setLiveFiles(project.files);         // ...y se reinicia liveFiles con los archivos del nuevo proyecto (descarta ediciones previas)
+  if (prevProjectkey !== currentKey) {                                                           // 2º Si el proyecto o su versión cambiaron desde el último render...
+    setPrevProjectkey(currentKey);                                                               // ...se actualiza la key guardada...
+    setLiveFiles(project.files);                                                                 // ...y se reinicia liveFiles con los archivos del nuevo proyecto (descarta ediciones previas)
   }
 
   // Recibe los archivos "en vivo" que llegan desde SandpackFileWatcher y actualiza el estado local
@@ -159,8 +160,48 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
         }}
       >
         {/* 5º Componente "espía" que detecta los cambios del editor y actualiza liveFiles */}
-        <SandpackFileWatcher onLiveFilesChange={handleLiveFilesChange} />
-        <p>SandpackErrorMonitor</p>
+        <SandpackFileWatcher
+          onLiveFilesChange={handleLiveFilesChange}
+        />
+
+        <SandpackErrorMonitor
+          onErrorChange={setShowErrorOverlay}
+        />
+
+        <SandpackLayout
+          style={{
+            height: "100%",
+            border: "none",
+            borderRadius: 0,
+            background: "transparent"
+          }}
+        >
+          {showCode && (
+            <SandpackCodeEditor
+              showTabs
+              showLineNumbers
+              showInlineErrors
+              wrapContent
+              style={{
+                height: "100%",
+                flex: 1,
+                minWidth: 0
+              }}
+            />
+          )}
+
+          <SandpackPreview
+            showNavigator={false}
+            showRefreshButton
+            showOpenInCodeSandbox={false}
+            showSandpackErrorOverlay={showErrorOverlay}
+            style={{
+              height: "100%",
+              flex: showCode ? 1 : 2,
+              minWidth: 0,
+            }}
+          />
+        </SandpackLayout>
       </SandpackProvider>
     </div>
   )
