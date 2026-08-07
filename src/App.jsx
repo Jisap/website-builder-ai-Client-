@@ -26,6 +26,9 @@ const App = () => {
           <Route path="/preview/:id" element={<PreviewPage />} />
         </Route>
 
+        {/* Public Routes */}
+        <Route path="/publish/:id" element={<PublishPage />} />
+
         {/* Catch-all - redirect to "/" */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

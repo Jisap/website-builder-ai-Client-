@@ -229,7 +229,7 @@ export const AppProvider = ({ children }) => {
   // pendiente cuando el componente se desmonta
   useEffect(() => {
     return () => {
-      debouncedSave.cancel()
+      debouncedSave.flush()
     }
   }, [debouncedSave])
 
