@@ -5,7 +5,8 @@ import Loading from "../components/Loading"
 import { AlertCircleIcon } from "lucide-react"
 import FullPagePreview from "../components/FullPagePreview"
 
-
+// Esta es una página independiente, no utiliza el contexto global
+// para cargar el proyecto. Carga el proyecto directamente desde la API.
 const PublishPage = () => {
 
   const { id } = useParams()
