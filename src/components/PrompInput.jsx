@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CloudUploadIcon, MicIcon } from 'lucide-react';
+import { ArrowRightIcon, CloudUploadIcon, Loader2Icon, MicIcon } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react'
 
 const PrompInput = ({

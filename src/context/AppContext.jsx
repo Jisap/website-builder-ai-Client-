@@ -167,7 +167,7 @@ export const AppProvider = ({ children }) => {
       try {
         const { data } = await api.post("/api/projects", { prompt });
         toast.success("AI Agent is planning structure...");
-        navigate(`/builder/${data._id}`)                                                                // redirige al builder del proyecto recién creado
+        navigate(`/builder/${data.project?._id ?? data._id}`)                                           // redirige al builder del proyecto recién creado
       } catch (error) {
         console.error("Failed to generate project", error);
         toast.error(error?.response?.data?.error || "Failed to generate project")

@@ -10,6 +10,7 @@ import PreviewPanel from '../components/PreviewPanel';
 import { toast } from 'react-hot-toast';
 import api from "../api/api.js"
 import PublishModal from '../components/PublishModal.jsx';
+import AgentProgressDashboard from '../components/AgentProgressDashboard.jsx';
 
 
 
