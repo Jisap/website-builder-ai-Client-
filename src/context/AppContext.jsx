@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react"
-import api from "../api/api";
+import api from "../api/api.js";
 import toast from "react-hot-toast";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import debounce from "lodash.debounce";
 
 const AppContext = createContext(undefined);
